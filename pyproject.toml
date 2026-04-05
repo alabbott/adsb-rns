@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "adsb-rns"
+version = "0.1.0"
+description = "ADS-B sender and receiver applications for Reticulum Network Stack"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+dependencies = [
+    "rns>=1.1.4",
+    "requests>=2.33.1",
+]
+authors = [
+    {name = "Alan Abbott", email = "alabbott@pm.me"}
+]
+
+[project.urls]
+Repository = "https://github.com/alabbott/adsb-rns"
+
+# [project.scripts]
+# adsb-sender   = "adsb_radar.sender:main"
+# adsb-receiver = "adsb_radar.receiver:main"
+# adsb-alerts   = "adsb_radar.alerts:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "UP", "B"]
+ignore = [
+    "E501",  # line-too-long — formatter handles this; don't double-report
+    "B006",  # mutable-default-arg — some intentional patterns in curses callbacks
+    "B007",  # unused-loop-var — some intentional patterns
+]
+
+[tool.ruff.format]
+quote-style = "double"

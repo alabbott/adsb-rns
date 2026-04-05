@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Runtime-generated files — contain local paths and live data
+**/receiver.conf
+adsb_sender.service
+*.bak
+*.log
+
+# Credentials / secrets
+.env
+sender_identity
+/identities/
+
+# Downloaded data — fetched automatically via --alert-db auto; too large for repo
+plane-alert-db.csv
+
+# Docker
+.dockerenv
+
+# Editor
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
