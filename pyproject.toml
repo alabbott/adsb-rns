@@ -12,6 +12,7 @@ requires-python = ">=3.10"
 dependencies = [
     "rns>=1.1.4",
     "requests>=2.33.1",
+    "textual>=8.2.3"
 ]
 authors = [
     {name = "Alan Abbott", email = "alabbott@pm.me"}

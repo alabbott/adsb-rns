@@ -1,0 +1,30 @@
+Placeholder {
+
+}
+
+#radar {
+    width: 100%;
+    background: blue;
+}
+
+Header {
+    background: #0cbc79;
+}
+
+Footer {
+    background: #0cbc79;
+}
+
+DataTable > .datatable--cursor {
+    background: orange;
+    color: $text;
+    text-style: bold;
+}
+
+#actable {
+    width: 30%;
+}
+
+#targetstring {
+
+}

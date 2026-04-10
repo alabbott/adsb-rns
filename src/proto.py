@@ -330,7 +330,7 @@ def decode_announce(app_data):
     except struct.error:
         return None
     lat_f = clat_i / 200.0
-    lon_f = clat_i / 200.0
+    lon_f = clon_i / 200.0
     if not (-90 <= lat_f <= 90) or not (-180.0 <= lon_f <= 180.0):
         return None
     return (lat_f, lon_f, int(r), name_b.rstrip(b'\x00').decode('ascii', errors='replace'))
