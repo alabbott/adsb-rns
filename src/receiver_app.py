@@ -7,6 +7,9 @@ from textual.widgets import *
 from textual.containers import *
 from textual.coordinate import Coordinate
 from textual.content import Content
+from textual.reactive import reactive
+import math
+from rich.style import Style
 
 
 AIRCRAFT_ROWS = [
@@ -67,6 +70,7 @@ SAMPLE_ROWS = [
         ("✗", "adsb-in", "connected", "43.67, -87.90", "3nm", "2s", "43b/s", "21"),
         
     ]
+
 
 class SourcesTable(DataTable):
 
@@ -145,46 +149,6 @@ class AircraftTable(DataTable):
                 self.current_sorts.add(sort_type)
             return reverse
 
-        def action_sort_by_average_time(self) -> None:
-            """Sort DataTable by average of times (via a function) and
-            passing of column data through positional arguments."""
-
-            def sort_by_average_time_then_last_name(row_data):
-                name, *scores = row_data
-                return (sum(scores) / len(scores), name.split()[-1])
-
-            table = self.query_one(DataTable)
-            table.sort(
-                "swimmer",
-                "time 1",
-                "time 2",
-                key=sort_by_average_time_then_last_name,
-                reverse=self.sort_reverse("time"),
-            )
-
-        def action_sort_by_last_name(self) -> None:
-            """Sort DataTable by last name of swimmer (via a lambda)."""
-            table = self.query_one(DataTable)
-            table.sort(
-                "swimmer",
-                key=lambda swimmer: swimmer.split()[-1],
-                reverse=self.sort_reverse("swimmer"),
-            )
-
-        def action_sort_by_country(self) -> None:
-            """Sort DataTable by country which is a `Rich.Text` object."""
-            table = self.query_one(DataTable)
-            table.sort(
-                "country",
-                key=lambda country: country.plain,
-                reverse=self.sort_reverse("country"),
-            )
-
-        def action_sort_by_columns(self) -> None:
-            """Sort DataTable without a key."""
-            table = self.query_one(DataTable)
-            table.sort("swimmer", "lane", reverse=self.sort_reverse("columns"))
-
         def action_sort_by_selected_column(self):
             table = self.query_one(DataTable)
             table.cursor_type = "column"
@@ -197,21 +161,52 @@ class AircraftTable(DataTable):
 
 class RadarGrid(Static):
 
-    text = ''
+    def render(self):
+        zoom = [25, 15, 10]
+        w = self.size.width
+        h = self.size.height - 1
+        cy = h // 2
+        cx = w // 2
+        scale_x = zoom[0] / cx
+        scale_y = zoom[0] / cy
 
-    def compose(self):
-        grid = [['.' * 20] for _ in range(20)]
-        self.text = grid
-        text = reactive(str(self.text))
-        
-        yield Static(str(text), expand=True)
+        grid = [[' ' for _ in range(w)] for _ in range(h)]
+        color = [['blue' for _ in range(w)] for _ in range(h)]
 
-    def get_size(self):
-        return self.size
-    
-    def on_mount(self):
-        grid = [['.' * 20] for _ in range(20)]
-        self.text = grid
+        rx = zoom[0] / scale_x
+        ry = zoom[0] / scale_y
+
+        seen = set()
+
+        points = 360
+
+        for i in range(points):
+            angle = 2 * math.pi * i / points
+            gx_ = int(round(cx + rx * math.cos(angle)))
+            gy_ = int(round(cy - ry * math.sin(angle)))
+            if (gx_, gy_) in seen:
+                continue
+            seen.add((gx_, gy_))
+            if 0 <= gx_ < w and 0 <= gy_ < h and grid[gy_][gx_] == " ":
+                grid[gy_][gx_] = "·"
+
+
+
+        grid[cy][cx] = '@'
+        color[cy][cx] = 'green'
+
+        for x in range(1,5):
+            grid[cy+x][cx] = '|'
+            grid[cy-x][cx] = '|'
+            grid[cy][cx+x] = '-'
+            grid[cy][cx-x] = '-'
+
+        txt = Text()
+        for y in range(h):
+            for x in range(w): 
+                txt.append(grid[y][x], style=Style(color=color[y][x]))
+            txt.append('\n')
+        return txt
 
 
 class RadarScreen(Screen):
@@ -225,7 +220,7 @@ class RadarScreen(Screen):
         yield Header()
         yield Horizontal(
             Vertical(
-                RadarGrid('Radar Grid', id='radar'),
+                RadarGrid(),
             ),
             AircraftTable(id='actable')
         )

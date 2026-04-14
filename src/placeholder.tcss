@@ -4,7 +4,6 @@ Placeholder {
 
 #radar {
     width: 100%;
-    background: blue;
 }
 
 Header {
@@ -27,4 +26,8 @@ DataTable > .datatable--cursor {
 
 #targetstring {
 
+}
+
+RadarGrid {
+    height: 100%;
 }
