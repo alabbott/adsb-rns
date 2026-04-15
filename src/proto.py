@@ -213,7 +213,7 @@ def encode_frame(aircraft_list, center_lat=CENTER_LAT, center_lon=CENTER_LON, ra
         if call:
             flags |= FL_CALLSIGN
 
-        parts.append(struct.pack(AIRCRAFT_FORMAT, icao_bytes, lat_i, lon_i, alt_i, trk_i, gs_i, vr_i, flags))
+        parts.append(struct.pack(AIRCRAFT_FORMAT, icao_bytes, lat_i, lon_i, alt_i, gs_i, vr_i, flags))
         if call:
             call_bytes = call.encode('ascii', errors='replace')
             parts.append(struct.pack('B', len(call_bytes)) + call_bytes)
@@ -328,7 +328,7 @@ def decode_announce(app_data):
     try:
         clat_i, clon_i, r, name_b = struct.unpack_from(ANNOUNCE_FORMAT, app_data, 0)
     except struct.error:
-        return None
+        return []
     lat_f = clat_i / 200.0
     lon_f = clon_i / 200.0
     if not (-90 <= lat_f <= 90) or not (-180.0 <= lon_f <= 180.0):

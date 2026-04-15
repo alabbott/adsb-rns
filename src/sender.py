@@ -15,7 +15,7 @@ APP_NAME = "adsb-rns"
 
 latest_client_link = None
 
-def server(config=None, name=None, lat=None, lon=None, range=None):
+def server(config=None, name='adsb-sender', lat=None, lon=None, range=None):
 
     reticulum = RNS.Reticulum(config)
 
@@ -115,7 +115,7 @@ if __name__ == '__main__':
         args = parser.parse_args()
 
         config = args.config if args.config else None
-        name = args.name if args.name else None
+        name = args.name if args.name else 'adsb-sender'
         lat = args.lat if args.lat else None
         lon = args.lon if args.lon else None
         range = args.range if args.range else None

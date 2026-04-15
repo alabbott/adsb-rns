@@ -5,6 +5,7 @@ receiver_app.py - Textual based TUI application for receiving ADS-B data over RN
 
 import math
 import time
+from pathlib import Path
 
 from rich.text import Text
 from rich.style import Style
@@ -48,6 +49,37 @@ SAMPLE_ROWS = [
     ("✗", "adsb-oh", "connected", "43.67, -87.90", "3nm", "2s", "43b/s", "21"),
     ("✗", "adsb-in", "connected", "43.67, -87.90", "3nm", "2s", "43b/s", "21"),
 ]
+
+# class NetworkManager:
+#     def __init__(self: NetworkManager, rns_config: str | None, id_file: str | None) -> None:
+#         self.RNS = RNS.Reticulum(rns_config)
+#         self.identity = None
+#         self.identitypath = Path(__file__).resolve().parent.joinpath('receiver_identity')
+
+#         if os.path.isfile(self.identitypath):
+#             try:
+#                 self.identity = RNS.Identity.from_file(self.identitypath)
+#                 if self.identity != None:
+#                     RNS.log("Loaded Primary Identity %s from %s" % (str(self.identity), self.identitypath))
+#                 else:
+#                     RNS.log("Could not load the Primary Identity from "+self.identitypath, RNS.LOG_ERROR)
+#                     nomadnet.panic()
+#             except Exception as e:
+#                 RNS.log("Could not load the Primary Identity from "+self.identitypath, RNS.LOG_ERROR)
+#                 RNS.log("The contained exception was: %s" % (str(e)), RNS.LOG_ERROR)
+#                 nomadnet.panic()
+#         else:
+#             try:
+#                 RNS.log("No Primary Identity file found, creating new...")
+#                 self.identity = RNS.Identity()
+#                 self.identity.to_file(self.identitypath)
+#                 RNS.log("Created new Primary Identity %s" % (str(self.identity)))
+#             except Exception as e:
+#                 RNS.log("Could not create and save a new Primary Identity", RNS.LOG_ERROR)
+#                 RNS.log("The contained exception was: %s" % (str(e)), RNS.LOG_ERROR)
+#                 nomadnet.panic()
+
+
 
 # Primary screen with radar grid and aircraft table
 class RadarScreen(Screen):

@@ -122,11 +122,12 @@ class ExampleAnnounceHandler:
         self.aspect_filter = aspect_filter
         self.known_destinations = []
 
-    def received_announce(self, destination_hash, announced_identity, app_data):
+    def received_announce(self, destination_hash, announced_identity, app_data=[]):
         RNS.log('Announce rx: ' + RNS.prettyhexrep(destination_hash))
 
         if app_data:
-            lat, lon, range, name = proto.decode_announce(app_data)
+            data = proto.decode_announce(app_data) or (0,0,0,'')
+            lat, lon, range, name = data
 
             RNS.log(f'name: {name} lat: {lat} lon: {lon} range: {range}')
 
